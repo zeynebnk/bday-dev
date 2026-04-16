@@ -1,0 +1,1583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+<meta name="googlebot" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Happy Birthday Joe</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --term-bg: #0d1117;
+    --term-border: #30363d;
+    --term-text: #c9d1d9;
+    --term-dim: #8b949e;
+    --term-prompt: #7ee787;
+    --term-cmd: #79c0ff;
+    --term-str: #a5d6ff;
+    --term-flag: #f0883e;
+    --term-warn: #ffa657;
+    --term-cursor: #58a6ff;
+    --mail-bg: #fdfaf3;
+    --mail-bg-hi: #ffffff;
+    --mail-chrome: #e9e4d8;
+    --mail-text: #1f2328;
+    --mail-dim: #6b6d75;
+    --mail-border: #d8d3c5;
+    --mail-accent: #c2410c;
+    --mail-subtle: #5a5d65;
+    --btn-red: #ff5f57;
+    --btn-yel: #febc2e;
+    --btn-grn: #28c840;
+    --laptop-alu:  #b6bac1;
+    --laptop-alu2: #8c9098;
+    --laptop-dk:   #3a3d44;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body { height: 100%; overflow: hidden; }
+
+  body {
+    background: #ffffff;
+    font-family: 'Inter', -apple-system, sans-serif;
+    color: #1a1d24;
+    position: relative;
+  }
+
+  .bg-video {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 78vw;
+    max-height: 90vh;
+    width: auto;
+    height: auto;
+    z-index: 0;
+    cursor: pointer;
+    transition: transform 0.6s ease;
+  }
+  .bg-video.dimmed {
+    pointer-events: none;
+    transform: translate(-50%, -50%) scale(0.95);
+  }
+
+  /* Dimming backdrop when laptop is open */
+  .backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(12, 14, 20, 0.6);
+    z-index: 5;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.45s ease;
+  }
+  .backdrop.on {
+    opacity: 1;
+  }
+
+  .hint {
+    position: fixed;
+    bottom: 42px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: rgba(40, 44, 52, 0.75);
+    letter-spacing: 2px;
+    z-index: 8;
+    padding: 10px 22px;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border: 1px solid rgba(30, 35, 45, 0.1);
+    border-radius: 8px;
+    animation: hintPulse 2s ease-in-out infinite;
+    pointer-events: none;
+    white-space: nowrap;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+  }
+  .hint.gone { opacity: 0; }
+  @keyframes hintPulse {
+    0%, 100% { opacity: 0.75; }
+    50%      { opacity: 1; }
+  }
+
+  /* === LAPTOP — flat, light silver === */
+  .laptop-stage {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 3.5vh;
+    z-index: 10;
+    pointer-events: none;
+    opacity: 0;
+    transform: scale(0.92) translateY(24px);
+    transition: opacity 0.45s ease, transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    overflow: hidden;
+  }
+  .laptop-stage.open {
+    pointer-events: auto;
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+
+  .laptop {
+    width: min(1140px, 96vw);
+    position: relative;
+    perspective: 2400px;
+    transform-style: preserve-3d;
+  }
+
+  /* Lid = the screen + silver bezel */
+  .lid {
+    width: 100%;
+    background: #c9cdd2;
+    border-radius: 12px 12px 3px 3px;
+    padding: 18px 18px 22px;
+    border: 1px solid #a2a6ab;
+    position: relative;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+  }
+
+  /* Camera */
+  .lid::before {
+    content: '';
+    position: absolute;
+    top: 7px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #2a2d32;
+    z-index: 3;
+  }
+
+  /* Brand hint below screen */
+  .lid::after {
+    content: '';
+    position: absolute;
+    bottom: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 3px;
+    border-radius: 2px;
+    background: #8e9297;
+    opacity: 0.55;
+  }
+
+  /* The actual screen */
+  .screen {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    background: #0a0e14;
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid #2a2d32;
+  }
+
+  /* Hinge */
+  .hinge {
+    width: 98%;
+    margin-left: 1%;
+    height: 10px;
+    background: #b3b7bc;
+    border-left: 1px solid #9ea2a7;
+    border-right: 1px solid #9ea2a7;
+    position: relative;
+    box-shadow: 0 2px 0 rgba(0,0,0,0.1);
+  }
+  .hinge::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 96px;
+    height: 3px;
+    background: #8c9096;
+    border-radius: 2px;
+  }
+
+  /* Keyboard base — tilted forward, keyboard visible before going off screen */
+  .base-wrap {
+    width: 100%;
+    perspective: 1800px;
+    margin-top: -1px;
+  }
+  .base {
+    width: 100%;
+    height: 340px;
+    background: #bec2c7;
+    border: 1px solid #9ea2a7;
+    border-top: none;
+    border-radius: 0 0 14px 14px;
+    position: relative;
+    transform-origin: top center;
+    transform: rotateX(70deg);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.4),
+      0 20px 40px rgba(0,0,0,0.3);
+  }
+
+  /* Keyboard recessed area */
+  .base::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 6%;
+    right: 6%;
+    height: 180px;
+    background: #2a2d32;
+    border-radius: 4px;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+  }
+
+  /* Trackpad */
+  .base::after {
+    content: '';
+    position: absolute;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 38%;
+    height: 80px;
+    background: #aeb2b7;
+    border: 1px solid #9a9ea3;
+    border-radius: 6px;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.15);
+  }
+
+  /* Keyboard keys — grid of tiny divs for rows of keys */
+  .keyboard {
+    position: absolute;
+    top: 24px;
+    left: 7%;
+    right: 7%;
+    height: 172px;
+    display: grid;
+    grid-template-rows: repeat(5, 1fr);
+    gap: 5px;
+    padding: 5px;
+  }
+  .kb-row {
+    display: grid;
+    grid-template-columns: repeat(14, 1fr);
+    gap: 4px;
+  }
+  .kb-key {
+    background: #3a3d42;
+    border-radius: 3px;
+    box-shadow: inset 0 -1px 0 rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.04);
+  }
+  .kb-key.wide { grid-column: span 2; }
+  .kb-key.space { grid-column: span 6; }
+
+  /* === Inside the screen: desktop area === */
+  .desktop {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 20%, #1b2838 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 80%, #141a26 0%, transparent 55%),
+      linear-gradient(180deg, #0c121a, #080b11);
+    overflow: hidden;
+  }
+
+  /* === Window styles === */
+  .win {
+    position: absolute;
+    background: var(--term-bg);
+    border: 1px solid var(--term-border);
+    border-radius: 6px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow:
+      0 10px 28px rgba(0,0,0,0.55),
+      0 3px 10px rgba(0,0,0,0.35);
+  }
+
+  .win-bar {
+    height: 26px;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    flex-shrink: 0;
+    position: relative;
+    background: linear-gradient(180deg, #21262d, #1a1f26);
+    border-bottom: 1px solid var(--term-border);
+    user-select: none;
+  }
+  .win-bar .dots { display: flex; gap: 6px; }
+  .win-bar .dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: filter 0.15s;
+  }
+  .win-bar .dot:hover { filter: brightness(1.25); }
+  .win-bar .dot.r { background: var(--btn-red); }
+  .win-bar .dot.y { background: var(--btn-yel); }
+  .win-bar .dot.g { background: var(--btn-grn); }
+  .win-bar .title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.66rem;
+    color: var(--term-dim);
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    max-width: 65%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .win-body {
+    flex: 1;
+    overflow-y: auto;
+  }
+  .win-body::-webkit-scrollbar { width: 6px; }
+  .win-body::-webkit-scrollbar-track { background: transparent; }
+  .win-body::-webkit-scrollbar-thumb { background: var(--term-border); border-radius: 3px; }
+
+  /* === Terminal window — takes up most of the screen === */
+  .term {
+    position: absolute;
+    left: 4%;
+    top: 6%;
+    width: 92%;
+    height: 88%;
+  }
+  .term .win-body {
+    padding: 12px 16px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    line-height: 1.5;
+    color: var(--term-text);
+  }
+
+  /* === Tabs === */
+  .term-tabs {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    padding: 6px 10px 0;
+    background: #15191f;
+    border-bottom: 1px solid var(--term-border);
+    flex-shrink: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+  }
+  .term-tabs::-webkit-scrollbar { display: none; }
+
+  .tab {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: #1a1f26;
+    border: 1px solid transparent;
+    border-bottom: none;
+    border-radius: 5px 5px 0 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--term-dim);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s, color 0.15s;
+    user-select: none;
+    position: relative;
+    top: 1px;
+    /* Fixed-width tabs */
+    width: 102px;
+    min-width: 102px;
+    max-width: 102px;
+    overflow: hidden;
+    text-transform: lowercase;
+  }
+  .tab .name {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .tab:hover {
+    background: #222831;
+    color: var(--term-text);
+  }
+  .tab.active {
+    background: var(--term-bg);
+    color: var(--term-text);
+    border-color: var(--term-border);
+    z-index: 2;
+  }
+  .tab .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--term-prompt);
+    opacity: 0.6;
+  }
+  .tab.active .dot {
+    background: var(--term-cmd);
+    opacity: 1;
+  }
+  .tab.final .dot { background: var(--term-flag); opacity: 1; }
+
+  .line { white-space: pre-wrap; word-break: break-word; }
+  .user { color: var(--term-cmd); }
+  .sep { color: var(--term-dim); }
+  .cmd { color: var(--term-text); }
+  .str { color: var(--term-str); }
+  .flag { color: var(--term-flag); }
+  .comment { color: var(--term-dim); font-style: italic; }
+  .ok { color: var(--term-prompt); }
+  .info { color: var(--term-cmd); }
+  .warn { color: var(--term-warn); }
+
+  .cursor {
+    display: inline-block;
+    width: 6px;
+    height: 1em;
+    background: var(--term-cursor);
+    vertical-align: text-bottom;
+    animation: blink 1.05s steps(2) infinite;
+    margin-left: 1px;
+    transform: translateY(2px);
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* === Mail popup — light theme, constrained within the laptop screen === */
+  .mail {
+    width: 58%;
+    max-height: 72%;
+    z-index: 20;
+    background: var(--mail-bg);
+    border: 1px solid var(--mail-border);
+    animation: winPop 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+    box-shadow:
+      0 16px 36px rgba(0,0,0,0.6),
+      0 5px 14px rgba(0,0,0,0.4);
+  }
+  .mail .win-bar {
+    background: linear-gradient(180deg, #f1ece0, #e2dccc);
+    border-bottom: 1px solid var(--mail-border);
+  }
+  .mail .win-bar .title {
+    color: var(--mail-subtle);
+  }
+  @keyframes winPop {
+    0%   { opacity: 0; transform: scale(0.92) translateY(6px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  .mail.closing { animation: winClose 0.18s ease-in forwards; }
+  @keyframes winClose {
+    to { opacity: 0; transform: scale(0.95) translateY(4px); }
+  }
+  .mail .win-body {
+    padding: 14px 18px 16px;
+    color: var(--mail-text);
+    font-size: 0.82rem;
+    line-height: 1.6;
+  }
+
+  .mail-head {
+    border-bottom: 1px solid var(--mail-border);
+    padding-bottom: 12px;
+    margin-bottom: 14px;
+  }
+  .mail-field {
+    display: flex;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.66rem;
+    margin-bottom: 3px;
+    color: var(--mail-dim);
+    line-height: 1.5;
+  }
+  .mail-field .k {
+    width: 50px;
+    color: var(--mail-dim);
+    flex-shrink: 0;
+  }
+  .mail-field .v { color: var(--mail-text); }
+  .mail-field .v.from-v {
+    color: var(--mail-accent);
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.76rem;
+  }
+  .mail-subject {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 0.94rem;
+    color: var(--mail-text);
+    margin-top: 6px;
+    margin-bottom: 0;
+  }
+  .mail-body {
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 0.84rem;
+    line-height: 1.7;
+    color: var(--mail-text);
+    white-space: pre-wrap;
+  }
+  .mail-footer {
+    margin-top: 14px;
+    padding-top: 10px;
+    border-top: 1px solid var(--mail-border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--mail-dim);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* Image window — wraps tightly around the image at its natural aspect ratio */
+  .image-win {
+    /* no fixed width/height — window hugs the image */
+    max-width: 46%;
+    max-height: 74%;
+    z-index: 21;
+    background: #0f1215;
+    border: 1px solid var(--term-border);
+    animation: winPop 0.32s cubic-bezier(0.22, 1, 0.36, 1) 0.06s both;
+  }
+  .image-win.closing { animation: winClose 0.2s ease-in forwards; }
+  .image-win .win-body {
+    padding: 0;
+    background: #0a0c0f;
+    line-height: 0;          /* prevent vertical whitespace */
+    overflow: hidden;
+  }
+  .image-win img {
+    display: block;
+    max-width: 32vw;         /* reasonable size on any viewport */
+    max-height: 46vh;
+    width: auto;             /* preserve natural aspect */
+    height: auto;
+  }
+
+  .desktop-hint {
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.56rem;
+    color: var(--term-dim);
+    opacity: 0;
+    letter-spacing: 1.5px;
+    pointer-events: none;
+    z-index: 25;
+  }
+  .desktop-hint.visible {
+    opacity: 1;
+    animation: hintFade 1.6s ease-in-out infinite;
+  }
+  @keyframes hintFade {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.85; }
+  }
+
+  /* Final ASCII */
+  .ascii-art {
+    font-family: 'JetBrains Mono', monospace;
+    white-space: pre;
+    line-height: 1.05;
+    font-size: clamp(0.32rem, 0.85vw, 0.68rem);
+    color: var(--term-prompt);
+    margin: 10px 0 4px;
+    text-shadow: 0 0 14px rgba(126, 231, 135, 0.3);
+  }
+  .ascii-cake {
+    color: var(--term-flag);
+    text-shadow: 0 0 12px rgba(240, 136, 62, 0.3);
+    margin-top: 4px;
+  }
+
+  .laptop-footer {
+    margin-top: 12px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.64rem;
+    color: rgba(255, 255, 255, 0.45);
+    letter-spacing: 1.5px;
+    white-space: nowrap;
+  }
+</style>
+</head>
+<body>
+
+<video class="bg-video" id="bgVid" autoplay loop muted playsinline>
+  <source src="cog.mp4" type="video/mp4">
+</video>
+<div class="backdrop" id="backdrop"></div>
+
+<div class="hint" id="hint">what's devin cooking up...</div>
+
+<div class="laptop-stage" id="laptopStage">
+  <div class="laptop" id="laptop">
+    <div class="lid">
+      <div class="screen" id="screen">
+        <div class="desktop" id="desktop">
+          <!-- Terminal inside the screen -->
+          <div class="win term" id="termWin">
+            <div class="win-bar">
+              <div class="dots">
+                <span class="dot r" id="dotClose" title="close"></span>
+                <span class="dot y"></span>
+                <span class="dot g"></span>
+              </div>
+              <div class="title" id="termTitle">devin@cog ~ birthday/bin</div>
+            </div>
+            <div class="term-tabs" id="termTabs"></div>
+            <div class="win-body" id="termBody"></div>
+          </div>
+          <div class="desktop-hint" id="deskHint">click anywhere empty to close</div>
+        </div>
+      </div>
+    </div>
+    <div class="hinge"></div>
+    <div class="base-wrap">
+      <div class="base">
+        <div class="keyboard" id="keyboard"></div>
+      </div>
+    </div>
+    <div class="laptop-footer" id="footer">click outside the laptop to continue</div>
+  </div>
+</div>
+
+<!-- messages array lives in messages.js — edit that file to add real messages & photos -->
+<script src="messages.js"></script>
+
+<script>
+// ============================================================
+// messages array is loaded from messages.js
+
+const HB_ASCII =
+" _   _                           ____  _      _   _       _                 \n" +
+"| | | | __ _ _ __  _ __  _   _  | __ )(_)_ __| |_| |__   __| | __ _ _   _   \n" +
+"| |_| |/ _` | '_ \\| '_ \\| | | | |  _ \\| | '__| __| '_ \\ / _` |/ _` | | | |  \n" +
+"|  _  | (_| | |_) | |_) | |_| | | |_) | | |  | |_| | | | (_| | (_| | |_| |  \n" +
+"|_| |_|\\__,_| .__/| .__/ \\__, | |____/|_|_|   \\__|_| |_|\\__,_|\\__,_|\\__, |  \n" +
+"            |_|   |_|    |___/                                       |___/  \n" +
+"                                                                            \n" +
+"                         _                  _ \n" +
+"                        | | ___   ___      | |\n" +
+"                     _  | |/ _ \\ / _ \\     | |\n" +
+"                    | |_| | (_) |  __/     |_|\n" +
+"                     \\___/ \\___/ \\___|     (_)";
+
+const CAKE_ASCII =
+"                    _ _ _ _ _\n" +
+"                   ( Y Y Y Y )\n" +
+"                  _|_|_|_|_|_|_\n" +
+"                 |_____________|\n" +
+"                  \\___________/ \n" +
+"                   \\_________/  \n" +
+"                    \\_______/   ";
+
+// ============================================================
+const bgVid    = document.getElementById('bgVid');
+const hintEl   = document.getElementById('hint');
+const stage    = document.getElementById('laptopStage');
+const desktop  = document.getElementById('desktop');
+const termBody = document.getElementById('termBody');
+const termWin  = document.getElementById('termWin');
+const dotClose = document.getElementById('dotClose');
+const footer   = document.getElementById('footer');
+const deskHint = document.getElementById('deskHint');
+
+let currentIdx = 0;            // next NEW message to play
+let state = 'idle';
+let typingTimers = [];
+let currentPopups = [];
+const visited = [];            // order of message indices with tabs
+let activeTab = -1;            // message index of active tab, or 'birthday' for final tab
+let finalShown = false;        // whether the final has been run at least once
+const termTabs = document.getElementById('termTabs');
+const BIRTHDAY = 'birthday';
+
+function setState(s) { state = s; }
+
+function sleep(ms) {
+  return new Promise(r => {
+    const id = setTimeout(r, ms);
+    typingTimers.push(id);
+  });
+}
+function clearTypingTimers() {
+  typingTimers.forEach(id => clearTimeout(id));
+  typingTimers = [];
+}
+
+function updateProgress() {
+  // counter removed
+}
+
+// === Tabs ===
+function renderTabs() {
+  termTabs.innerHTML = '';
+  // Birthday tab goes leftmost once final has been shown
+  if (finalShown) {
+    const tab = document.createElement('div');
+    tab.className = 'tab final' + (activeTab === BIRTHDAY ? ' active' : '');
+    tab.dataset.idx = BIRTHDAY;
+    tab.innerHTML = '<span class="dot"></span><span class="name">birthday.sh</span>';
+    tab.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (activeTab !== BIRTHDAY) switchToBirthday();
+    });
+    termTabs.appendChild(tab);
+  }
+  // Newest message first → iterate visited in reverse
+  for (let i = visited.length - 1; i >= 0; i--) {
+    const idx = visited[i];
+    const tab = document.createElement('div');
+    tab.className = 'tab' + (idx === activeTab ? ' active' : '');
+    tab.dataset.idx = idx;
+    tab.innerHTML = '<span class="dot"></span><span class="name">' + escapeHTML(messages[idx].from) + '</span>';
+    tab.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (idx !== activeTab) switchTab(idx);
+    });
+    termTabs.appendChild(tab);
+  }
+}
+
+async function switchTab(idx) {
+  if (state === 'animating') return;
+  setState('animating');
+  currentPopups.forEach(w => w.remove());
+  currentPopups = [];
+  clearTypingTimers();
+  termBody.innerHTML = '';
+  activeTab = idx;
+  renderTabs();
+  await runMessage(idx);
+  setState('open');
+}
+
+async function switchToBirthday() {
+  if (state === 'animating') return;
+  setState('animating');
+  currentPopups.forEach(w => w.remove());
+  currentPopups = [];
+  clearTypingTimers();
+  termBody.innerHTML = '';
+  activeTab = BIRTHDAY;
+  renderTabs();
+  await runFinal(true); // quick mode for replay
+  setState('open');
+}
+
+// Terminal helpers
+function appendEl(parent, el) {
+  parent.appendChild(el);
+  parent.scrollTop = parent.scrollHeight;
+  return el;
+}
+function addLine(html, cls = '') {
+  const d = document.createElement('div');
+  d.className = 'line' + (cls ? ' ' + cls : '');
+  d.innerHTML = html;
+  return appendEl(termBody, d);
+}
+function makePrompt() {
+  const line = document.createElement('div');
+  line.className = 'line';
+  line.innerHTML =
+    '<span class="user">joe</span>' +
+    '<span class="sep">@</span>' +
+    '<span class="user">dev</span>' +
+    '<span class="sep">:~/birthday$</span> ';
+  const cmdSpan = document.createElement('span');
+  cmdSpan.className = 'cmd';
+  line.appendChild(cmdSpan);
+  const cursor = document.createElement('span');
+  cursor.className = 'cursor';
+  line.appendChild(cursor);
+  appendEl(termBody, line);
+  return { line, cmdSpan, cursor };
+}
+async function typeRich(target, segments, baseDelay = 22, jitter = 22) {
+  for (const seg of segments) {
+    const span = document.createElement('span');
+    if (seg.cls) span.className = seg.cls;
+    target.appendChild(span);
+    for (let i = 0; i < seg.text.length; i++) {
+      span.textContent += seg.text[i];
+      termBody.scrollTop = termBody.scrollHeight;
+      let d = baseDelay + Math.random() * jitter;
+      if ('.,;:'.includes(seg.text[i])) d += 90;
+      await sleep(d);
+    }
+  }
+}
+
+// Animated progress bar that updates in place (like wget/pip)
+async function loadingBar(opts) {
+  const { label = '', total = 100, duration = 1500, suffix = '', barWidth = 24, color = 'info' } = opts;
+  const line = document.createElement('div');
+  line.className = 'line';
+  appendEl(termBody, line);
+  const start = performance.now();
+  function render(pct) {
+    const filled = Math.round(pct / 100 * barWidth);
+    const bar = '█'.repeat(filled) + '░'.repeat(barWidth - filled);
+    const p = pct.toFixed(0).padStart(3, ' ');
+    line.innerHTML =
+      '<span class="' + color + '">' + escapeHTML(label) + '</span> ' +
+      '<span class="comment">[' + bar + ']</span> ' +
+      '<span class="' + (pct >= 100 ? 'ok' : color) + '">' + p + '%</span>' +
+      (suffix ? ' <span class="comment">' + escapeHTML(suffix) + '</span>' : '');
+  }
+  render(0);
+  // Animate with jittery steps (feels more realistic than linear)
+  return new Promise(resolve => {
+    function step() {
+      const t = Math.min((performance.now() - start) / duration, 1);
+      // ease-out + small random wobble to look real
+      const eased = 1 - Math.pow(1 - t, 2);
+      render(Math.min(100, eased * 100));
+      if (t < 1) {
+        setTimeout(step, 40 + Math.random() * 80);
+      } else {
+        render(100);
+        resolve();
+      }
+    }
+    step();
+  });
+}
+
+// A spinner that runs for a given duration
+async function spinner(label, duration = 900, color = 'info') {
+  const chars = ['⠋','⠙','⠹','⠸','⠼','⠴','⠦','⠧','⠇','⠏'];
+  const line = document.createElement('div');
+  line.className = 'line';
+  appendEl(termBody, line);
+  const start = performance.now();
+  let i = 0;
+  return new Promise(resolve => {
+    function step() {
+      line.innerHTML = '<span class="' + color + '">' + chars[i % chars.length] + '</span>  <span>' + escapeHTML(label) + '</span>';
+      i++;
+      if (performance.now() - start < duration) {
+        setTimeout(step, 80);
+      } else {
+        line.innerHTML = '<span class="ok">✓</span>  <span>' + escapeHTML(label) + '</span>';
+        resolve();
+      }
+    }
+    step();
+  });
+}
+
+function makeEmail(from) {
+  return (from || 'unknown').toLowerCase().replace(/\s+/g, '.') + '@cog.dev';
+}
+
+function escapeHTML(s) {
+  return String(s).replace(/[&<>"']/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  })[c]);
+}
+
+// === Popup layouts (vary by message index for visual interest) ===
+// Each layout has positions for mail window and optional image window
+const LAYOUTS = [
+  // 0: mail left-top, image right-middle
+  { mail: { left: '5%',  top: '8%'  }, img: { right: '6%',  top: '22%' } },
+  // 1: mail center, no image (will be ignored if no image)
+  { mail: { left: '18%', top: '14%' }, img: { right: '8%',  bottom: '10%' } },
+  // 2: mail right-top, image left-bottom
+  { mail: { right: '5%', top: '10%' }, img: { left: '6%',   bottom: '8%'  } },
+  // 3: mail left-bottom, image right-top
+  { mail: { left: '6%',  bottom: '8%'}, img: { right: '7%',  top: '8%'    } },
+  // 4: mail slightly tilted to the right, image on the left center
+  { mail: { left: '28%', top: '10%' }, img: { left: '5%',   top: '28%'   } },
+  // 5: mail right-center, image left-top
+  { mail: { right: '6%', top: '16%' }, img: { left: '8%',   top: '12%'   } },
+  // 6: mail center-low, image top-right
+  { mail: { left: '14%', top: '24%' }, img: { right: '10%', top: '6%'    } },
+  // 7: mail top-center (low position), image bottom
+  { mail: { left: '22%', top: '6%'  }, img: { left: '14%',  bottom: '8%' } },
+  // 8: mail left, image stacked slightly off
+  { mail: { left: '4%',  top: '16%' }, img: { right: '5%',  top: '14%'   } },
+  // 9: mail top-right, image low-left
+  { mail: { right: '4%', top: '8%'  }, img: { left: '10%',  bottom: '10%'} },
+];
+
+function applyPosition(el, pos) {
+  if (pos.left)   el.style.left   = pos.left;
+  if (pos.right)  el.style.right  = pos.right;
+  if (pos.top)    el.style.top    = pos.top;
+  if (pos.bottom) el.style.bottom = pos.bottom;
+  // Small random rotation for organic feel
+  const rot = (Math.random() * 2 - 1) * 0.8; // -0.8 to +0.8 deg
+  el.style.transform = `rotate(${rot.toFixed(2)}deg)`;
+  el.style.transformOrigin = 'center center';
+}
+
+function openMail(msg) {
+  const layout = LAYOUTS[currentIdx % LAYOUTS.length];
+
+  const win = document.createElement('div');
+  win.className = 'win mail';
+  applyPosition(win, layout.mail);
+
+  const from = msg.from;
+  const email = msg.email || makeEmail(from);
+  const subject = 'happy birthday joe!';
+
+  win.innerHTML =
+    '<div class="win-bar">' +
+      '<div class="dots"><span class="dot r" data-close></span><span class="dot y"></span><span class="dot g"></span></div>' +
+      '<div class="title">mail &mdash; ' + escapeHTML(subject) + '</div>' +
+    '</div>' +
+    '<div class="win-body">' +
+      '<div class="mail-head">' +
+        '<div class="mail-field"><span class="k">From:</span><span class="v from-v">' + escapeHTML(from) + '</span><span style="margin-left:6px;color:var(--mail-dim);font-family:\'JetBrains Mono\',monospace;">&lt;' + escapeHTML(email) + '&gt;</span></div>' +
+        '<div class="mail-field"><span class="k">To:</span><span class="v">joe</span></div>' +
+        '<div class="mail-field"><span class="k">Date:</span><span class="v">04/17/2026</span></div>' +
+        '<div class="mail-subject">' + escapeHTML(subject) + '</div>' +
+      '</div>' +
+      '<div class="mail-body">' + escapeHTML(msg.text) + '</div>' +
+      '<div class="mail-footer">' +
+        '<span>04/17/2026</span>' +
+        '<span>click outside to continue</span>' +
+      '</div>' +
+    '</div>';
+
+  desktop.appendChild(win);
+  currentPopups.push(win);
+
+  win.querySelector('[data-close]').addEventListener('click', (e) => {
+    e.stopPropagation();
+    closeAllPopups();
+  });
+  makeDraggable(win);
+
+  // Collect image paths — support `image: "..."` (single) or `images: [...]` (multi)
+  const imgs = [];
+  if (Array.isArray(msg.images)) imgs.push(...msg.images);
+  if (typeof msg.image === 'string') imgs.push(msg.image);
+
+  imgs.forEach((src, i) => {
+    setTimeout(() => openImageWin(src, msg.from, layout.img, i), 180 + i * 140);
+  });
+
+  deskHint.classList.add('visible');
+}
+
+function openImageWin(src, fromName, basePos, offsetIdx = 0) {
+  const win = document.createElement('div');
+  win.className = 'win image-win';
+  // Slight stagger for multiple images
+  const pos = Object.assign({}, basePos);
+  // Convert to px-based stagger: if pos has left, add offset to left; if right, add offset to right
+  const stagger = offsetIdx * 22;
+  if (pos.left)   pos.left   = `calc(${pos.left} + ${stagger}px)`;
+  if (pos.right)  pos.right  = `calc(${pos.right} + ${stagger}px)`;
+  if (pos.top)    pos.top    = `calc(${pos.top} + ${stagger}px)`;
+  if (pos.bottom) pos.bottom = `calc(${pos.bottom} + ${stagger}px)`;
+  applyPosition(win, pos);
+
+  const name = src.split('/').pop();
+  win.innerHTML =
+    '<div class="win-bar">' +
+      '<div class="dots"><span class="dot r" data-close></span><span class="dot y"></span><span class="dot g"></span></div>' +
+      '<div class="title">preview &mdash; ' + escapeHTML(name) + '</div>' +
+    '</div>' +
+    '<div class="win-body"><img src="' + escapeHTML(src) + '" alt="' + escapeHTML(fromName) + '"/></div>';
+
+  desktop.appendChild(win);
+  currentPopups.push(win);
+
+  win.querySelector('[data-close]').addEventListener('click', (e) => {
+    e.stopPropagation();
+    closeAllPopups();
+  });
+  makeDraggable(win);
+}
+
+function closeAllPopups() {
+  if (state !== 'open') return;
+  currentPopups.forEach(w => {
+    w.classList.add('closing');
+    setTimeout(() => w.remove(), 180);
+  });
+  currentPopups = [];
+  deskHint.classList.remove('visible');
+  setTimeout(closeLaptop, 200);
+}
+
+// === Sessions ===
+// ============================================================
+// Per-message flavors — each is an async function that plays the session
+// ============================================================
+async function runFlavor(idx) {
+  const msg = messages[idx];
+  const name = msg.from.toLowerCase();
+  const { cmdSpan, cursor } = makePrompt();
+
+  switch (idx % 10) {
+    case 0: { // alex — mail client
+      await typeRich(cmdSpan, [
+        { text: 'mail ', cls: '' },
+        { text: '--open ', cls: 'flag' },
+        { text: '01', cls: 'str' }
+      ]);
+      cursor.remove();
+      addLine('');
+      addLine('<span class="comment"># inbox: 1 unread from ' + name + '@cog.dev</span>');
+      await sleep(320);
+      await spinner('fetching envelope from ' + name + '...', 900);
+      await sleep(180);
+      addLine('<span class="ok">[OK]</span>    <span>signature verified &middot; 287 bytes</span>');
+      await sleep(300);
+      addLine('<span class="ok">[OK]</span>    <span>rendering to mail.app</span>');
+      await sleep(500);
+      return;
+    }
+
+    case 1: { // sam — pip install
+      await typeRich(cmdSpan, [
+        { text: 'pip ', cls: '' },
+        { text: 'install ', cls: '' },
+        { text: 'birthday-wish-' + name, cls: 'str' }
+      ]);
+      cursor.remove();
+      addLine('');
+      addLine('<span class="comment">Collecting birthday-wish-' + name + '</span>');
+      await sleep(260);
+      await loadingBar({
+        label: '  Downloading',
+        suffix: name + '-1.0.0-py3-none-any.whl',
+        duration: 1600, barWidth: 20, color: 'info'
+      });
+      await sleep(160);
+      addLine('<span class="comment">Installing collected packages: birthday-wish-' + name + '</span>');
+      await sleep(300);
+      addLine('<span class="ok">Successfully installed birthday-wish-' + name + '-1.0.0</span>');
+      await sleep(420);
+      return;
+    }
+
+    case 2: { // maya — model load with progress
+      await typeRich(cmdSpan, [
+        { text: 'python ', cls: '' },
+        { text: '-m ', cls: 'flag' },
+        { text: 'greet ', cls: '' },
+        { text: '--weights ', cls: 'flag' },
+        { text: name + '.ckpt', cls: 'str' }
+      ]);
+      cursor.remove();
+      addLine('');
+      addLine('<span class="info">[INFO]</span>  <span>torch 2.5.1 &middot; cuda:0 &middot; A100 40GB</span>');
+      await sleep(280);
+      addLine('<span class="info">[INFO]</span>  <span>loading checkpoint <span class="warn">' + name + '.ckpt</span> (1.4 GiB)</span>');
+      await sleep(200);
+      await loadingBar({
+        label: '  loading', suffix: '1.4 GiB', duration: 1900, color: 'info', barWidth: 26
+      });
+      await sleep(140);
+      await spinner('initializing tokenizer...', 700);
+      await spinner('warming up kv-cache...', 900);
+      addLine('<span class="ok">[OK]</span>    <span>model ready &middot; rendering message</span>');
+      await sleep(400);
+      return;
+    }
+
+    case 3: { // chris — decrypt
+      await typeRich(cmdSpan, [
+        { text: './decrypt.sh ', cls: '' },
+        { text: '--key ', cls: 'flag' },
+        { text: '$SECRET ', cls: 'warn' },
+        { text: '--in ', cls: 'flag' },
+        { text: name + '.eml.enc', cls: 'str' }
+      ]);
+      cursor.remove();
+      addLine('');
+      addLine('<span class="info">[INFO]</span>  <span>aes-256-gcm &middot; key loaded from env</span>');
+      await sleep(280);
+      await spinner('verifying signature (ed25519)...', 820);
+      addLine('<span class="info">[INFO]</span>  <span>decrypting 512 bytes...</span>');
+      await loadingBar({ label: '  decrypting', duration: 900, barWidth: 18, color: 'info' });
+      addLine('<span class="ok">[OK]</span>    <span>integrity check passed</span>');
+      await sleep(500);
+      addLine('<span class="ok">[OK]</span>    <span>plaintext ready</span>');
+      await sleep(400);
+      return;
+    }
+
+    case 4: { // dana — curl + jq
+      await typeRich(cmdSpan, [
+        { text: 'curl ', cls: '' },
+        { text: '-s ', cls: 'flag' },
+        { text: 'https://friends.dev/msg/', cls: 'str' },
+        { text: name, cls: 'str' },
+        { text: ' | ', cls: 'sep' },
+        { text: 'jq .', cls: '' }
+      ]);
+      cursor.remove();
+      addLine('');
+      await sleep(420);
+      addLine('<span class="comment">{</span>');
+      await sleep(140);
+      addLine('<span class="comment">&nbsp;&nbsp;"from": "<span class="warn">' + name + '</span>",</span>');
+      await sleep(100);
+      addLine('<span class="comment">&nbsp;&nbsp;"status": "received",</span>');
+      await sleep(100);
+      addLine('<span class="comment">&nbsp;&nbsp;"bytes": 287,</span>');
+      await sleep(100);
+      addLine('<span class="comment">&nbsp;&nbsp;"content_type": "text/plain",</span>');
+      await sleep(100);
+      addLine('<span class="comment">&nbsp;&nbsp;"timestamp": "' + new Date().toISOString().split('.')[0] + 'Z"</span>');
+      await sleep(100);
+      addLine('<span class="comment">}</span>');
+      await sleep(420);
+      addLine('<span class="ok">[OK]</span>    <span>200 &middot; piping to mail.app</span>');
+      await sleep(380);
+      return;
+    }
+
+    case 5: { // jordan — make build
+      await typeRich(cmdSpan, [
+        { text: 'make ', cls: '' },
+        { text: name, cls: 'str' }
+      ]);
+      cursor.remove();
+      addLine('');
+      const files = ['birthday.c', 'wishes.c', 'cake.c', name + '.c'];
+      for (const f of files) {
+        addLine('<span class="info">gcc</span>  <span>-c -O2 -Wall ' + f + ' -o build/' + f.replace('.c', '.o') + '</span>');
+        await sleep(200 + Math.random() * 150);
+      }
+      addLine('<span class="info">ld</span>   <span>build/*.o -o bin/birthday-' + name + '</span>');
+      await sleep(320);
+      addLine('<span class="ok">[OK]</span>    <span>built in 2.1s</span>');
+      await sleep(200);
+      addLine('<span class="info">[INFO]</span>  <span>running bin/birthday-' + name + '...</span>');
+      await sleep(400);
+      return;
+    }
+
+    case 6: { // taylor — training
+      await typeRich(cmdSpan, [
+        { text: 'python ', cls: '' },
+        { text: 'train.py ', cls: '' },
+        { text: '--resume ', cls: 'flag' },
+        { text: name + '-run-42', cls: 'str' },
+        { text: ' --epochs ', cls: 'flag' },
+        { text: '1', cls: 'str' }
+      ]);
+      cursor.remove();
+      addLine('');
+      addLine('<span class="info">[INFO]</span>  <span>resuming from step 41,023 &middot; seed 1337</span>');
+      await sleep(300);
+      addLine('<span class="info">[INFO]</span>  <span>run: <span class="warn">' + name + '-run-42</span> (wandb: synced)</span>');
+      await sleep(320);
+      addLine('<span class="comment">Epoch 1/1</span>');
+      await loadingBar({
+        label: '  step 1/500', duration: 1400, color: 'info', barWidth: 22,
+        suffix: 'loss: 0.31  lr: 1e-4'
+      });
+      await loadingBar({
+        label: '  step 500/500', duration: 900, color: 'ok', barWidth: 22,
+        suffix: 'loss: 0.0003  ✓'
+      });
+      addLine('<span class="ok">[OK]</span>    <span>training complete &middot; saving to ' + name + '.ckpt</span>');
+      await sleep(400);
+      return;
+    }
+
+    case 7: { // riley — ssh
+      await typeRich(cmdSpan, [
+        { text: 'ssh ', cls: '' },
+        { text: name + '@cog.dev ', cls: 'str' },
+        { text: '"cat ', cls: '' },
+        { text: '~/birthday.txt', cls: 'str' },
+        { text: '"', cls: '' }
+      ]);
+      cursor.remove();
+      addLine('');
+      addLine('<span class="comment">The authenticity of host \'cog.dev (192.168.1.42)\' can\'t be established.</span>');
+      await sleep(320);
+      addLine('<span class="comment">ED25519 key fingerprint is SHA256:' + 'x'.repeat(6) + 'jOeNa' + 'x'.repeat(8) + '.</span>');
+      await sleep(420);
+      await spinner('establishing secure channel...', 900);
+      addLine('<span class="ok">[OK]</span>    <span>tunnel up &middot; ' + name + '@cog.dev</span>');
+      await sleep(300);
+      addLine('<span class="info">[INFO]</span>  <span>streaming stdout...</span>');
+      await sleep(400);
+      return;
+    }
+
+    case 8: { // morgan — docker run
+      await typeRich(cmdSpan, [
+        { text: 'docker ', cls: '' },
+        { text: 'run ', cls: '' },
+        { text: '--rm ', cls: 'flag' },
+        { text: 'friends/' + name, cls: 'str' },
+        { text: ':latest', cls: 'str' }
+      ]);
+      cursor.remove();
+      addLine('');
+      addLine('<span class="comment">Unable to find image \'friends/' + name + ':latest\' locally</span>');
+      await sleep(220);
+      addLine('<span class="comment">latest: Pulling from friends/' + name + '</span>');
+      await sleep(260);
+      // Fake docker layer pulls
+      const layers = ['a1b2c3d4', 'e5f6a7b8', 'c9d0e1f2', '3a4b5c6d'];
+      for (const l of layers) {
+        const line = document.createElement('div');
+        line.className = 'line';
+        appendEl(termBody, line);
+        line.innerHTML = '<span class="warn">' + l + '</span>: <span class="comment">Pulling fs layer</span>';
+        await sleep(120 + Math.random() * 160);
+        line.innerHTML = '<span class="warn">' + l + '</span>: <span class="ok">Pull complete</span>';
+      }
+      addLine('<span class="comment">Digest: sha256:' + 'f'.repeat(16) + name + 'f'.repeat(16) + '</span>');
+      await sleep(280);
+      addLine('<span class="ok">[OK]</span>    <span>container started</span>');
+      await sleep(400);
+      return;
+    }
+
+    case 9: { // casey — git pull
+      await typeRich(cmdSpan, [
+        { text: 'git ', cls: '' },
+        { text: 'pull ', cls: '' },
+        { text: 'origin ', cls: 'flag' },
+        { text: 'birthday/' + name, cls: 'str' }
+      ]);
+      cursor.remove();
+      addLine('');
+      addLine('<span class="info">remote:</span> <span>Enumerating objects: 3, done.</span>');
+      await sleep(180);
+      addLine('<span class="info">remote:</span> <span>Counting objects: 100% (3/3), done.</span>');
+      await sleep(180);
+      addLine('<span class="info">remote:</span> <span>Compressing objects: 100% (2/2), done.</span>');
+      await sleep(220);
+      addLine('<span class="ok">remote:</span> <span>Total 3 (delta 0), reused 0</span>');
+      await sleep(260);
+      addLine('<span class="comment">From cog.dev:friends/birthday</span>');
+      addLine('<span class="comment">&nbsp;&nbsp;&nbsp;a1b2c3d..e4f5a6b&nbsp;&nbsp;birthday/' + name + '&nbsp;-&gt; FETCH_HEAD</span>');
+      await sleep(320);
+      addLine('<span class="info">Updating a1b2c3d..e4f5a6b</span>');
+      addLine('<span class="info">Fast-forward</span>');
+      addLine('<span class="comment">&nbsp;inbox/' + name + '.eml | 1 +</span>');
+      addLine('<span class="comment">&nbsp;1 file changed, 1 insertion(+)</span>');
+      await sleep(300);
+      addLine('<span class="ok">[OK]</span>    <span>message merged into inbox</span>');
+      await sleep(400);
+      return;
+    }
+  }
+}
+
+async function runMessage(idx) {
+  const msg = messages[idx];
+  addLine('<span class="comment"># joe@dev ~ birthday/bin</span>');
+  addLine('<span class="comment"># tab: ' + msg.from.toLowerCase() + '</span>');
+  addLine('');
+  await runFlavor(idx);
+  openMail(msg);
+}
+
+async function runFinal(quick = false) {
+  termBody.innerHTML = '';
+  if (!quick) {
+    addLine('<span class="comment"># all messages received</span>');
+    addLine('<span class="comment"># compiling birthday sequence...</span>');
+    await sleep(340);
+  } else {
+    addLine('<span class="comment"># replaying birthday.sh</span>');
+    await sleep(180);
+  }
+
+  const { cmdSpan, cursor } = makePrompt();
+  await typeRich(cmdSpan, [
+    { text: 'sudo ', cls: 'warn' },
+    { text: './happy_birthday ', cls: '' },
+    { text: '--recipient ', cls: 'flag' },
+    { text: '"Joe" ', cls: 'str' },
+    { text: '--candles ', cls: 'flag' },
+    { text: '20', cls: 'str' }
+  ]);
+  cursor.remove();
+
+  if (!quick) {
+    addLine('');
+    addLine('<span class="info">[INFO]</span>  <span>collecting wishes from friends...</span>');
+    await loadingBar({ label: '  buffering', duration: 1400, barWidth: 24, color: 'info', suffix: 'wishes' });
+    await sleep(160);
+    addLine('<span class="info">[INFO]</span>  <span>rendering cake mesh...</span>');
+    await loadingBar({ label: '  rendering', duration: 1200, barWidth: 24, color: 'info', suffix: 'cake.obj' });
+    await sleep(120);
+    await spinner('igniting candles (20/20)...', 1400);
+    addLine('<span class="ok">[OK]</span>    <span>all candles lit</span>');
+    await sleep(240);
+    addLine('<span class="info">[INFO]</span>  <span>executing birthday.sh...</span>');
+    await sleep(400);
+    addLine('');
+  } else {
+    addLine('');
+    await sleep(200);
+  }
+
+  const art = document.createElement('pre');
+  art.className = 'ascii-art';
+  art.textContent = HB_ASCII;
+  appendEl(termBody, art);
+  await sleep(240);
+
+  const cake = document.createElement('pre');
+  cake.className = 'ascii-art ascii-cake';
+  cake.textContent = CAKE_ASCII;
+  appendEl(termBody, cake);
+
+  addLine('');
+  addLine('<span class="comment"># process complete. exit 0.</span>');
+  addLine('<span class="comment"># happy birthday, joe! </span>');
+
+  footer.textContent = '';
+  finalShown = true;
+}
+
+// === Open/close ===
+async function openLaptop() {
+  if (state !== 'idle') return;
+  setState('animating');
+  hintEl.classList.add('gone');
+  bgVid.classList.add('dimmed');
+  document.getElementById('backdrop').classList.add('on');
+  termBody.innerHTML = '';
+
+  // Pre-register the tab BEFORE showing the laptop so it's already there when it opens
+  let newIdx = -1;
+  if (currentIdx < messages.length) {
+    // First-time open of a new message
+    newIdx = currentIdx;
+    if (!visited.includes(newIdx)) visited.push(newIdx);
+    activeTab = newIdx;
+    renderTabs();
+  } else if (!finalShown) {
+    // First-time final run
+    activeTab = BIRTHDAY;
+    termTabs.innerHTML = '';
+  } else {
+    // Reopening after final — default to birthday tab, show all tabs
+    activeTab = BIRTHDAY;
+    renderTabs();
+  }
+
+  stage.classList.add('open');
+  await sleep(460);
+
+  if (newIdx !== -1) {
+    await runMessage(newIdx);
+    currentIdx++;
+    updateProgress();
+    setState('open');
+  } else if (!finalShown) {
+    await runFinal(false);
+    renderTabs();
+    setState('open');
+  } else {
+    // Replay final (quick mode)
+    await runFinal(true);
+    setState('open');
+  }
+}
+
+function closeLaptop() {
+  if (state === 'animating') return;
+  if (state !== 'open') return;
+
+  currentPopups.forEach(w => w.remove());
+  currentPopups = [];
+  stage.classList.remove('open');
+  bgVid.classList.remove('dimmed');
+  document.getElementById('backdrop').classList.remove('on');
+  clearTypingTimers();
+  setState('idle');
+
+  if (currentIdx >= messages.length && !finalShown) {
+    hintEl.textContent = 'click devin one more time';
+    hintEl.classList.remove('gone');
+  } else if (finalShown) {
+    hintEl.textContent = 'click devin to reopen';
+    hintEl.classList.remove('gone');
+  }
+}
+
+// === Events ===
+bgVid.addEventListener('click', openLaptop);
+
+stage.addEventListener('click', (e) => {
+  // Click on stage backdrop (outside laptop) closes
+  if (e.target === stage) {
+    if (currentPopups.length > 0) closeAllPopups();
+    else closeLaptop();
+  }
+});
+
+desktop.addEventListener('click', (e) => {
+  if (e.target === desktop && currentPopups.length > 0) {
+    closeAllPopups();
+  }
+});
+
+dotClose.addEventListener('click', (e) => {
+  e.stopPropagation();
+  closeAllPopups();
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    if (currentPopups.length > 0) closeAllPopups();
+    else closeLaptop();
+  }
+});
+
+updateProgress();
+
+// =============================================================
+// Build keyboard keys
+// =============================================================
+(function buildKeyboard() {
+  const kb = document.getElementById('keyboard');
+  if (!kb) return;
+  // 5 rows, 14 keys per row (with space bar on last row)
+  const rowConfigs = [
+    14, 14, 14, 14,
+    // bottom row: 3 modifier keys, space, 3 modifier keys
+    'bottom'
+  ];
+  for (let r = 0; r < 5; r++) {
+    const row = document.createElement('div');
+    row.className = 'kb-row';
+    if (r === 4) {
+      // bottom row with space bar
+      for (let k = 0; k < 4; k++) {
+        const key = document.createElement('div');
+        key.className = 'kb-key';
+        row.appendChild(key);
+      }
+      const sp = document.createElement('div');
+      sp.className = 'kb-key space';
+      row.appendChild(sp);
+      for (let k = 0; k < 4; k++) {
+        const key = document.createElement('div');
+        key.className = 'kb-key';
+        row.appendChild(key);
+      }
+    } else {
+      for (let k = 0; k < 14; k++) {
+        const key = document.createElement('div');
+        key.className = 'kb-key';
+        row.appendChild(key);
+      }
+    }
+    kb.appendChild(row);
+  }
+})();
+
+// =============================================================
+// Draggable windows
+// =============================================================
+let zTop = 100;
+function makeDraggable(win) {
+  const bar = win.querySelector('.win-bar');
+  if (!bar) return;
+  bar.style.cursor = 'grab';
+  let startX, startY, origLeft, origTop;
+  let dragging = false;
+
+  bar.addEventListener('mousedown', onDown);
+  bar.addEventListener('touchstart', (e) => {
+    const t = e.touches[0];
+    onDown({ clientX: t.clientX, clientY: t.clientY, preventDefault: () => e.preventDefault(), target: e.target });
+  }, { passive: false });
+
+  function onDown(e) {
+    // Don't start drag on traffic light clicks
+    if (e.target && e.target.classList && e.target.classList.contains('dot')) return;
+    dragging = true;
+    bar.style.cursor = 'grabbing';
+    // Bring to front
+    zTop += 1;
+    win.style.zIndex = zTop;
+
+    const rect = win.getBoundingClientRect();
+    const parentRect = win.parentElement.getBoundingClientRect();
+    // Convert current positioning to absolute left/top relative to parent
+    win.style.left = (rect.left - parentRect.left) + 'px';
+    win.style.top  = (rect.top - parentRect.top) + 'px';
+    win.style.right = 'auto';
+    win.style.bottom = 'auto';
+    // Cancel rotation during drag for easier handling
+    win.style.transform = 'none';
+
+    startX = e.clientX;
+    startY = e.clientY;
+    origLeft = rect.left - parentRect.left;
+    origTop  = rect.top  - parentRect.top;
+
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+    document.addEventListener('touchmove', onTouchMove, { passive: false });
+    document.addEventListener('touchend', onUp);
+    e.preventDefault && e.preventDefault();
+  }
+
+  function onMove(e) {
+    if (!dragging) return;
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+    win.style.left = (origLeft + dx) + 'px';
+    win.style.top  = (origTop  + dy) + 'px';
+  }
+
+  function onTouchMove(e) {
+    if (!dragging) return;
+    const t = e.touches[0];
+    onMove({ clientX: t.clientX, clientY: t.clientY });
+    e.preventDefault();
+  }
+
+  function onUp() {
+    dragging = false;
+    bar.style.cursor = 'grab';
+    document.removeEventListener('mousemove', onMove);
+    document.removeEventListener('mouseup', onUp);
+    document.removeEventListener('touchmove', onTouchMove);
+    document.removeEventListener('touchend', onUp);
+  }
+
+  // Focus on click (bring to front)
+  win.addEventListener('mousedown', () => {
+    zTop += 1;
+    win.style.zIndex = zTop;
+  });
+}
+
+</script>
+</body>
+</html>
