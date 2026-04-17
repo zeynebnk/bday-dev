@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
 <meta name="googlebot" content="noindex, nofollow">
 <meta name="referrer" content="no-referrer">
-<title>Happy Birthday</title>
+<title>Happy Birthday!</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&display=swap');
 
@@ -800,7 +800,7 @@ function makePrompt() {
   const line = document.createElement('div');
   line.className = 'line';
   line.innerHTML =
-    '<span class="user">devin</span>' +
+    '<span class="user"></span>' +
     '<span class="sep">@</span>' +
     '<span class="user">dev</span>' +
     '<span class="sep">:~/birthday$</span> ';
@@ -942,7 +942,7 @@ function openMail(msg) {
 
   const from = msg.from;
   const email = msg.email || makeEmail(from);
-  const subject = 'happy birthday!';
+  const subject = 'happy birthday !';
 
   win.innerHTML =
     '<div class="win-bar">' +
@@ -952,7 +952,7 @@ function openMail(msg) {
     '<div class="win-body">' +
       '<div class="mail-head">' +
         '<div class="mail-field"><span class="k">From:</span><span class="v from-v">' + escapeHTML(from) + '</span><span style="margin-left:6px;color:var(--mail-dim);font-family:\'JetBrains Mono\',monospace;">&lt;' + escapeHTML(email) + '&gt;</span></div>' +
-        '<div class="mail-field"><span class="k">To:</span><span class="v">devin</span></div>' +
+        '<div class="mail-field"><span class="k">To:</span><span class="v">Devin</span></div>' +
         '<div class="mail-field"><span class="k">Date:</span><span class="v">04/17/2026</span></div>' +
         '<div class="mail-subject">' + escapeHTML(subject) + '</div>' +
       '</div>' +
