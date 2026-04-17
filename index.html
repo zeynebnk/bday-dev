@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
 <meta name="googlebot" content="noindex, nofollow">
 <meta name="referrer" content="no-referrer">
-<title>Happy Birthday Joe</title>
+<title>Happy Birthday</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&display=swap');
 
@@ -800,7 +800,7 @@ function makePrompt() {
   const line = document.createElement('div');
   line.className = 'line';
   line.innerHTML =
-    '<span class="user">joe</span>' +
+    '<span class="user">devin</span>' +
     '<span class="sep">@</span>' +
     '<span class="user">dev</span>' +
     '<span class="sep">:~/birthday$</span> ';
@@ -942,7 +942,7 @@ function openMail(msg) {
 
   const from = msg.from;
   const email = msg.email || makeEmail(from);
-  const subject = 'happy birthday joe!';
+  const subject = 'happy birthday!';
 
   win.innerHTML =
     '<div class="win-bar">' +
@@ -952,7 +952,7 @@ function openMail(msg) {
     '<div class="win-body">' +
       '<div class="mail-head">' +
         '<div class="mail-field"><span class="k">From:</span><span class="v from-v">' + escapeHTML(from) + '</span><span style="margin-left:6px;color:var(--mail-dim);font-family:\'JetBrains Mono\',monospace;">&lt;' + escapeHTML(email) + '&gt;</span></div>' +
-        '<div class="mail-field"><span class="k">To:</span><span class="v">joe</span></div>' +
+        '<div class="mail-field"><span class="k">To:</span><span class="v">devin</span></div>' +
         '<div class="mail-field"><span class="k">Date:</span><span class="v">04/17/2026</span></div>' +
         '<div class="mail-subject">' + escapeHTML(subject) + '</div>' +
       '</div>' +
@@ -1293,7 +1293,7 @@ async function runFlavor(idx) {
 
 async function runMessage(idx) {
   const msg = messages[idx];
-  addLine('<span class="comment"># joe@dev ~ birthday/bin</span>');
+  addLine('<span class="comment"># devin@dev ~ birthday/bin</span>');
   addLine('<span class="comment"># tab: ' + msg.from.toLowerCase() + '</span>');
   addLine('');
   await runFlavor(idx);
@@ -1316,7 +1316,7 @@ async function runFinal(quick = false) {
     { text: 'sudo ', cls: 'warn' },
     { text: './happy_birthday ', cls: '' },
     { text: '--recipient ', cls: 'flag' },
-    { text: '"Joe" ', cls: 'str' },
+    { text: '"Devin" ', cls: 'str' },
     { text: '--candles ', cls: 'flag' },
     { text: '20', cls: 'str' }
   ]);
@@ -1354,7 +1354,7 @@ async function runFinal(quick = false) {
 
   addLine('');
   addLine('<span class="comment"># process complete. exit 0.</span>');
-  addLine('<span class="comment"># happy birthday, joe! </span>');
+  addLine('<span class="comment"># happy birthday! </span>');
 
   footer.textContent = '';
   finalShown = true;
