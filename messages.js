@@ -17,7 +17,7 @@ Claude 🎉✨🎂🌸`,
     print("make a wish ✨")
     eat(cake)
     if happy: continue,`,
-    photos = ['photos/clod.avif', 'photos/clod.png']
+    images: ['photos/clod.avif', 'photos/clod.png']
   },
   
 ];
